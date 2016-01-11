@@ -28,7 +28,7 @@ public class Builder implements ContextBuilder<PotentialWitch> {
 		
 		//Erstelle Agenten
 		for(int i=0; i<howMany; i++){
-			PotentialWitch w = new PotentialWitch(0.0, 0.0); //TODO: richtige Werte übergeben
+			PotentialWitch w = new PotentialWitch(0.0, 0.0); //TODO: richtige Werte Ã¼bergeben
 			context.add(w);
 		}
 		
@@ -37,6 +37,9 @@ public class Builder implements ContextBuilder<PotentialWitch> {
 			PotentialWitch w = (PotentialWitch) obj;
 			
 			double outEdges = RandomHelper.nextIntFromTo(1, 10); //TODO: wie viele Kanten?
+			//Random machen mit minimal Wert
+			//gibt Personen die wenig kennen und welche die viele kennen
+			
 			for(int i=0; i<outEdges; i++){
 				PotentialWitch acquaintance = (PotentialWitch) context.getRandomObject();
 				//keine Kante zu sich selbst
