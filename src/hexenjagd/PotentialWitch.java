@@ -22,7 +22,6 @@ public class PotentialWitch {
 	
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step(){
-		//jeden Schritt was tun?
 		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
 		//TODO: Accusation jeden Schritt zurücksetzen oder behalten?
 		calcAccusation(context);
