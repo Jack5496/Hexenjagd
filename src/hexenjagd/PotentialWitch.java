@@ -24,13 +24,18 @@ public class PotentialWitch {
 	public void step(){
 		//jeden Schritt was tun?
 		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
-		//TODO: Accusation jeden Schritt zur�cksetzen oder behalten?
+		//TODO: Accusation jeden Schritt zurücksetzen oder behalten?
 		calcAccusation(context);
 		
 		//TODO: ersetze 10 durch Schwellwert
-		//Oder abh�ngig davon, wie viele Hexen angeklagt wurden?
+		//Oder abhängig davon, wie viele Hexen angeklagt wurden?
 		//Nur Hexe mit meisten Anklagen?
+		
+		//abhängig machen davon wie viele Hexen angeklagt worden sind.
+		
 		if(accused > 10){
+			//anklage mittelsd Feature (später)
+			
 			//context.remove(this); //Agent 'dies'
 		}
 		
@@ -49,8 +54,25 @@ public class PotentialWitch {
 				//TODO: Berechnung Wahrscheinlichkeit anklage
 				//ersetze dann Math.random() durch Wahrscheinlichkeit
 				//und 0.8 durch Schwellwert
-				// Wenn Accused nicht zur�ckgesetzt wird, mit einbeziehen wie viele schon?
-				if(Math.random()>0.8){
+				// Wenn Accused nicht zurückgesetzt wird, mit einbeziehen wie viele schon?
+				
+				double wahrAnklage = Math.random();
+				
+				int howMany = RunEnvironment.getInstance().getParameters().getValue("people");
+				double prozentDerAnklage = (double)_accused/(double)howMany;
+				//Mögliches fraktal, _accused könnte größer sein als howMany, wenn jemand der Kläger letzte runde verstorben ist
+				
+				
+				double prozentFuerMeinungsUebernahme = 0.2;
+				double MeinungsUebernahmeEinfluss = 0.5;
+				
+				
+				if(prozentDerAnklage>prozentFuerMeinungsUebernahme){
+					wahrAnklage+= MeinungsUebernahmeEinfluss;
+				}
+				
+				double schwellWertAngklage = 0.8;
+				if(wahrAnklage>schwellWertAngklage){
 					incrementAccusation();
 				}
 			}
