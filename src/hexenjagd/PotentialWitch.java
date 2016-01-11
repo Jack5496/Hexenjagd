@@ -1,5 +1,7 @@
 package hexenjagd;
 
+import java.util.Iterator;
+
 import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.space.graph.Network;
@@ -8,79 +10,145 @@ import repast.simphony.util.ContextUtils;
 
 public class PotentialWitch {
 
-	
+	private static double accusationBound;
+	private static double sentenceBound;
 	private int accused; //Number of People accusing this PotentialWitch 
 	private int _accused;
+	private boolean sentenced;
 	private double fearOfWitches; //
 	private double fearOfAccusation;
+	private double suggestibility;
+	private boolean _sentenced;
 	
-	public PotentialWitch(double fearOfWitches, double fearOfAccusation){
+	public PotentialWitch(double fearOfWitches, double fearOfAccusation, double suggestibility){
+		
 		this.fearOfWitches = fearOfWitches;
 		this.fearOfAccusation = fearOfAccusation;
+		this.suggestibility = suggestibility;
+		sentenced = false;
 		accused = 0;
 	}
 	
+	
+	
+
+	public static double getAccusationBound() {
+		return accusationBound;
+	}
+
+
+
+
+	public static void setAccusationBound(double accusationBound) {
+		PotentialWitch.accusationBound = accusationBound;
+	}
+
+
+
+
+	public static double getSentenceBound() {
+		return sentenceBound;
+	}
+
+
+
+
+	public static void setSentenceBound(double sentenceBound) {
+		PotentialWitch.sentenceBound = sentenceBound;
+	}
+
+
+
+
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step(){
-		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
-		//TODO: Accusation jeden Schritt zurücksetzen oder behalten?
-		calcAccusation(context);
-		
-		//TODO: ersetze 10 durch Schwellwert
-		//Oder abhängig davon, wie viele Hexen angeklagt wurden?
-		//Nur Hexe mit meisten Anklagen?
-		
-		//abhängig machen davon wie viele Hexen angeklagt worden sind.
-		
-		if(accused > 10){
-			//anklage mittelsd Feature (später)
+		fearOfWitches *= 1.02;   //TODO: Parameter!!!
+		fearOfAccusation *= 1.02;
+		if(!isSentenced()){
+			Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
+
+			calcAccusation(context); //accusation jeden Schritt zur�cksetzen, aber beeinflusst n�chste Runde.
 			
-			//context.remove(this); //Agent 'dies'
+			//TODO: Angst neu berechnen
+			//abhaengig machen davon wie viele Hexen angeklagt worden sind.
+
 		}
 		
 	}
 	
+	private void calcSentences() {
+		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
+		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
+		int max = getMaxAccusations();
+		Iterable<PotentialWitch> witches = network.getNodes();
+		for(PotentialWitch w: witches){
+			if(((double)w.getAccused()/(double)max) > sentenceBound)
+				w._sentenced = true;
+		}
+	}
+
+	public int getAccused() {
+		return accused;
+	}
+
+	public void setAccused(int accused) {
+		this.accused = accused;
+	}
+
+	private int getMaxAccusations(){
+		int max = 0;
+		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
+		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
+		Iterable<PotentialWitch> witches = network.getNodes();
+		for(PotentialWitch w: witches){
+			if(!w.isSentenced() && w.getAccused()>max)
+				max = w.getAccused();
+		}
+		return max;
+	}
+
 	public void calcAccusation(Context<PotentialWitch> context){
 		
 		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
-		
+		_accused = 0;
 		if(network != null){
-		for(Object obj: network.getInEdges(this)){
-			RepastEdge<PotentialWitch> edge = (RepastEdge<PotentialWitch>) obj;
-			PotentialWitch possibleAccuser = (PotentialWitch) edge.getSource();
-			
-			if(!possibleAccuser.equals(this)){
-				//TODO: Berechnung Wahrscheinlichkeit anklage
-				//ersetze dann Math.random() durch Wahrscheinlichkeit
-				//und 0.8 durch Schwellwert
-				// Wenn Accused nicht zurückgesetzt wird, mit einbeziehen wie viele schon?
+			for(Object obj: network.getAdjacent(this)){
+				PotentialWitch possAcc = (PotentialWitch) obj;
+				RepastEdge<PotentialWitch> edge = network.getEdge(possAcc, this);
 				
-				double wahrAnklage = Math.random();
-				
-				int howMany = RunEnvironment.getInstance().getParameters().getValue("people");
-				double prozentDerAnklage = (double)_accused/(double)howMany;
-				//Mögliches fraktal, _accused könnte größer sein als howMany, wenn jemand der Kläger letzte runde verstorben ist
-				
-				
-				double prozentFuerMeinungsUebernahme = 0.2;
-				double MeinungsUebernahmeEinfluss = 0.5;
-				
-				
-				if(prozentDerAnklage>prozentFuerMeinungsUebernahme){
-					wahrAnklage+= MeinungsUebernahmeEinfluss;
-				}
-				
-				double schwellWertAngklage = 0.8;
-				if(wahrAnklage>schwellWertAngklage){
-					incrementAccusation();
+				if(!possAcc.equals(this) && !possAcc.isSentenced()){
+					double accusation = (possAcc.getFearOfWitches() + possAcc.getFearOfAccusation() + (1-(edge.getWeight()/15)) + (accused*possAcc.getSuggestibility()) ) /4 ; //TODO: 15 anpassen?
+					if (accusation >= accusationBound){
+						incrementAccusation();
+					}
+					
 				}
 			}
-		}}
+		}
 	}
 	
+	private double getSuggestibility() {
+		// TODO Auto-generated method stub
+		return suggestibility;
+	}
+
+	private double getFearOfAccusation() {
+		// TODO Auto-generated method stub
+		return fearOfAccusation;
+	}
+
+	private double getFearOfWitches() {
+		// TODO Auto-generated method stub
+		return fearOfWitches;
+	}
+
 	@ScheduledMethod(start = 0.5, interval = 1.0)
 	public void update(){
-		accused = _accused;
+		if(!sentenced){
+			accused = _accused;
+			calcSentences();
+			sentenced = _sentenced;
+		}
 	}
 	
 	public void incrementAccusation(){
@@ -90,4 +158,15 @@ public class PotentialWitch {
 	public int nbAccusations(){
 		return accused;
 	}
+	
+	public boolean isSentenced(){
+		return sentenced;
+	}
+	
+	public int sentenced(){
+		
+		return (sentenced? 1:0);
+	}
+	
+	
 }

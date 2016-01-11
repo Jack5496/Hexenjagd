@@ -16,7 +16,7 @@ public class Builder implements ContextBuilder<PotentialWitch> {
 	public Context<PotentialWitch> build(Context<PotentialWitch> context) {
 		
 		
-		NetworkBuilder<PotentialWitch> netBuilder = new NetworkBuilder<PotentialWitch>("hexenjagd", context, true);
+		NetworkBuilder<PotentialWitch> netBuilder = new NetworkBuilder<PotentialWitch>("hexenjagd", context, false);
 		Network<PotentialWitch> network = netBuilder.buildNetwork();
 
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -26,19 +26,20 @@ public class Builder implements ContextBuilder<PotentialWitch> {
 		int endAt = (Integer) p.getValue("endAt");		//Fuer Batch Runs benoetigt
 		RunEnvironment.getInstance().endAt(endAt);
 		
+		PotentialWitch w=null;
 		//Erstelle Agenten
 		for(int i=0; i<howMany; i++){
-			PotentialWitch w = new PotentialWitch(0.0, 0.0); //TODO: richtige Werte übergeben
+			w = new PotentialWitch(0.7, 0.4, 0.5); //TODO: richtige Werte uebergeben
 			context.add(w);
 		}
+		w.setAccusationBound(0.8);
+		w.setSentenceBound(0.9);
 		
 		//Erstelle Kanten
 		for(Object obj : context.getObjects(PotentialWitch.class)){
-			PotentialWitch w = (PotentialWitch) obj;
+			w = (PotentialWitch) obj;
 			
 			double outEdges = RandomHelper.nextIntFromTo(1, 10); //TODO: wie viele Kanten?
-			//Random machen mit minimal Wert
-			//gibt Personen die wenig kennen und welche die viele kennen
 			
 			for(int i=0; i<outEdges; i++){
 				PotentialWitch acquaintance = (PotentialWitch) context.getRandomObject();

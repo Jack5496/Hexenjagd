@@ -1,6 +1,6 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
   <name>Time Series Chart</name>
-  <dataSet>A Data Set2</dataSet>
+  <dataSet>de</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel></yAxisLabel>
   <chartTitle></chartTitle>
@@ -21,9 +21,9 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
-      <string>bb2</string>
+      <string>Sentenced Witches</string>
       <SeriesData>
-        <label>bb2</label>
+        <label>Sentenced Witches</label>
         <color>
           <red>0</red>
           <green>0</green>
