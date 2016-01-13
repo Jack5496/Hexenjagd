@@ -86,7 +86,7 @@ public class PotentialWitch {
 			Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
 
 			calcSentence(network);
-			System.out.println(getAllAccusations(network));
+			
 			calcFear(getNewSentences(network), getAllAccusations(network));
 			calcAccusation(network); //accusation jeden Schritt zurücksetzen, aber beeinflusst nächste Runde.
 			
@@ -105,7 +105,7 @@ public class PotentialWitch {
 				
 				if(!possAcc.equals(this) && !possAcc.isSentenced()){
 					int max = getMaxAccusations(network);
-					//System.out.println(max);
+				
 					if(max < 1)
 						max = 1;
 					
@@ -128,7 +128,7 @@ public class PotentialWitch {
 	private void calcFear(int sentences, int accusations) {
 		
 		double sentFactor = (double) sentences /((double) howMany/200)-3;
-		//System.out.println(sentFactor);
+		
 		setFearOfWitches(getFearOfWitches() - getFearOfWitches()*fearFactor * sentFactor);
 		
 		double accFactor = (double)accusations/((double)howMany/8)-2;
