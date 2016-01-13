@@ -12,6 +12,10 @@ public class PotentialWitch {
 
 	private static double accusationBound;
 	private static double sentenceBound;
+	private static int accusationBound2;
+	private static double maxWeight;
+	private static int maxEdges;
+	private static int howMany;
 	private int accused; //Number of People accusing this PotentialWitch 
 	private int _accused;
 	private boolean sentenced;
@@ -19,14 +23,16 @@ public class PotentialWitch {
 	private double fearOfAccusation;
 	private double suggestibility;
 	private boolean _sentenced;
+	private double fearFactor;
 	
-	public PotentialWitch(double fearOfWitches, double fearOfAccusation, double suggestibility){
+	public PotentialWitch(double fearOfWitches, double fearOfAccusation, double suggestibility, double fearFactor){
 		
-		this.fearOfWitches = fearOfWitches;
-		this.fearOfAccusation = fearOfAccusation;
+		setFearOfWitches(fearOfWitches);
+		setFearOfAccusation(fearOfAccusation);
 		this.suggestibility = suggestibility;
 		sentenced = false;
 		accused = 0;
+		this.fearFactor = fearFactor;
 	}
 	
 	
@@ -62,28 +68,34 @@ public class PotentialWitch {
 
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step(){
-		fearOfWitches *= 1.02;   //TODO: Parameter!!!
-		fearOfAccusation *= 1.02;
+		
 		if(!isSentenced()){
 			Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
 
 			calcAccusation(context); //accusation jeden Schritt zurücksetzen, aber beeinflusst nächste Runde.
 			
-			//TODO: Angst neu berechnen
-			//abhaengig machen davon wie viele Hexen angeklagt worden sind.
 
 		}
 		
 	}
 	
-	private void calcSentences() {
+	private void calcSentence() {
+		/*int counter = 0;
 		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
 		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
 		int max = getMaxAccusations();
 		Iterable<PotentialWitch> witches = network.getNodes();
 		for(PotentialWitch w: witches){
-			if(((double)w.getAccused()/(double)max) > sentenceBound)
+			if(!w.isSentenced() && w.getAccused()> accusationBound2 && ((double)w.getAccused()/(double)max) > sentenceBound){
 				w._sentenced = true;
+				counter++;
+			}
+		}
+		System.out.println(counter);
+		return counter;*/
+		int max = getMaxAccusations();
+		if(!this.isSentenced() && this.getAccused()> accusationBound2 && ((double)this.getAccused()/(double)max) > sentenceBound){
+				this._sentenced = true;
 		}
 	}
 
@@ -96,15 +108,27 @@ public class PotentialWitch {
 	}
 
 	private int getMaxAccusations(){
-		int max = 0;
+		int maxAccusations = 0;
 		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
 		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
 		Iterable<PotentialWitch> witches = network.getNodes();
 		for(PotentialWitch w: witches){
-			if(!w.isSentenced() && w.getAccused()>max)
-				max = w.getAccused();
+			if(!w.isSentenced() && w.getAccused()>maxAccusations){
+				maxAccusations = w.getAccused();
+			}
 		}
-		return max;
+		return maxAccusations;
+	}
+	private int getAllAccusations(){
+		int nb = 0;
+		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
+		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
+		Iterable<PotentialWitch> witches = network.getNodes();
+		for(PotentialWitch w: witches){
+			if(!w.isSentenced())
+				nb+= w.accused();
+		}
+		return nb;
 	}
 
 	public void calcAccusation(Context<PotentialWitch> context){
@@ -117,7 +141,18 @@ public class PotentialWitch {
 				RepastEdge<PotentialWitch> edge = network.getEdge(possAcc, this);
 				
 				if(!possAcc.equals(this) && !possAcc.isSentenced()){
-					double accusation = (possAcc.getFearOfWitches() + possAcc.getFearOfAccusation() + (1-(edge.getWeight()/15)) + (accused*possAcc.getSuggestibility()) ) /4 ; //TODO: 15 anpassen?
+					int max = getMaxAccusations();
+					//System.out.println(max);
+					if(max < 1)
+						max = 1;
+					
+					double alreadyAccused = ((accused/max)*possAcc.getSuggestibility());
+					double accusation;
+					if(alreadyAccused>0)
+						accusation = (possAcc.getFearOfWitches()*2 + possAcc.getFearOfAccusation() + (1-(edge.getWeight()/maxWeight))*2 + alreadyAccused*2 ) /7 ; 
+					else{	
+						accusation = (possAcc.getFearOfWitches()*2 + possAcc.getFearOfAccusation() + (1-(edge.getWeight()/maxWeight))*2 ) /5 ;
+					}
 					if (accusation >= accusationBound){
 						incrementAccusation();
 					}
@@ -127,30 +162,70 @@ public class PotentialWitch {
 		}
 	}
 	
-	private double getSuggestibility() {
+	public double getSuggestibility() {
 		// TODO Auto-generated method stub
 		return suggestibility;
 	}
 
-	private double getFearOfAccusation() {
+	public double getFearOfAccusation() {
 		// TODO Auto-generated method stub
 		return fearOfAccusation;
 	}
 
-	private double getFearOfWitches() {
+	public double getFearOfWitches() {
 		// TODO Auto-generated method stub
 		return fearOfWitches;
+	}
+	
+	public void setFearOfWitches(double fear ){
+		if(fear > 1){
+			fearOfWitches = 1;
+		}
+		else if (fear <0){
+			fearOfWitches = 0;
+		}
+		else{
+			fearOfWitches = fear;
+		}
+	}
+	
+	public void setFearOfAccusation(double fear ){
+		if(fear > 1){
+			fearOfAccusation = 1;
+		}
+		else if (fear <0){
+			fearOfAccusation = 0;
+		}
+		else{
+			fearOfAccusation = fear;
+		}
 	}
 
 	@ScheduledMethod(start = 0.5, interval = 1.0)
 	public void update(){
 		if(!sentenced){
 			accused = _accused;
-			calcSentences();
+			/*int cntS =*/ calcSentence();
+			//calcFear(cntS, getAllAccusations());
 			sentenced = _sentenced;
 		}
 	}
 	
+	private void calcFear(int sentences, int accusations) {
+		
+		if(sentences >0)
+			setFearOfWitches(getFearOfWitches() - getFearOfWitches()*fearFactor);
+		else
+			setFearOfWitches(getFearOfWitches() + getFearOfWitches()*fearFactor);
+		if(accusations >0)
+			setFearOfAccusation(getFearOfAccusation() + getFearOfAccusation()*fearFactor);
+		else
+			setFearOfAccusation(getFearOfAccusation() - getFearOfAccusation()*fearFactor);
+	}
+
+
+
+
 	public void incrementAccusation(){
 		_accused++;
 	}
@@ -168,5 +243,44 @@ public class PotentialWitch {
 		return (sentenced? 1:0);
 	}
 	
+	public int accused(){
+		if(accused>0){
+			return 1;
+		}
+		return 0;
+		
+	}
+
+
+
+
+	public static void setAccusationBound2(int accBound2) {
+		accusationBound2 = accBound2;
+		
+	}
+
+
+
+
+	public static void setMaxWeight(double maxWeight) {
+		PotentialWitch.maxWeight = maxWeight;
+		
+	}
+
+
+
+
+	public static void setMaxEdges(int maxEdges) {
+		PotentialWitch.maxEdges = maxEdges;
+		
+	}
+
+
+
+
+	public static void setHowMany(int howMany) {
+		PotentialWitch.howMany = howMany;
+		
+	}
 	
 }

@@ -22,30 +22,53 @@ public class Builder implements ContextBuilder<PotentialWitch> {
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		//getting all parameters by .getValue("param_name")
 		int howMany = (Integer)p.getValue("people");
-		
+		double fearOfWitchesMin = (Double)p.getValue("fearWMin");
+		double fearOfWitchesMax = (Double)p.getValue("fearWMax");
+		double fearOfAccusationMin = (Double)p.getValue("fearAMin");
+		double fearOfAccusationMax = (Double)p.getValue("fearAMax");
+		double suggestibilityMin = (Double)p.getValue("suggMin");
+		double suggestibilityMax = (Double)p.getValue("suggMax");
+		double accBound = (Double) p.getValue("accBound");
+		int accBound2 = (Integer) p.getValue("accBound2");
+		double sentBound =  (Double) p.getValue("sentBound");
+		double fearFactorMin = (Double) p.getValue("fearFMin");
+		double fearFactorMax = (Double) p.getValue("fearFMax");
+		int maxEdges= (Integer) p.getValue("maxE");
+		double maxWeight = (Double) p.getValue("maxW");
 		int endAt = (Integer) p.getValue("endAt");		//Fuer Batch Runs benoetigt
 		RunEnvironment.getInstance().endAt(endAt);
+		
 		
 		PotentialWitch w=null;
 		//Erstelle Agenten
 		for(int i=0; i<howMany; i++){
-			w = new PotentialWitch(0.7, 0.4, 0.5); //TODO: richtige Werte uebergeben
+			double fearOfWitches = RandomHelper.nextDoubleFromTo(fearOfWitchesMin, fearOfWitchesMax);
+			double fearOfAccusation = RandomHelper.nextDoubleFromTo(fearOfAccusationMin, fearOfAccusationMax);
+			double suggestibility = RandomHelper.nextDoubleFromTo(suggestibilityMin, suggestibilityMax);
+			double fearFactor =  RandomHelper.nextDoubleFromTo(fearFactorMin, fearFactorMax);
+			w = new PotentialWitch(fearOfWitches, fearOfAccusation, suggestibility, fearFactor);
 			context.add(w);
 		}
-		w.setAccusationBound(0.8);
-		w.setSentenceBound(0.9);
 		
+		PotentialWitch.setAccusationBound(accBound);
+		PotentialWitch.setAccusationBound2(accBound2);
+		PotentialWitch.setSentenceBound(sentBound);
+		PotentialWitch.setMaxWeight(maxWeight);
+		PotentialWitch.setMaxEdges(maxEdges);
+		PotentialWitch.setHowMany(howMany);
 		//Erstelle Kanten
 		for(Object obj : context.getObjects(PotentialWitch.class)){
 			w = (PotentialWitch) obj;
 			
-			double outEdges = RandomHelper.nextIntFromTo(1, 10); //TODO: wie viele Kanten?
+		
+			double outEdges = RandomHelper.nextIntFromTo(1, maxEdges); 
 			
 			for(int i=0; i<outEdges; i++){
 				PotentialWitch acquaintance = (PotentialWitch) context.getRandomObject();
 				//keine Kante zu sich selbst
 				if(! acquaintance.equals(w) && acquaintance != null && w != null){
-					double weight = RandomHelper.nextDoubleFromTo(1.0, 15.0); //TODO: Anpassen Range?
+					
+					double weight = RandomHelper.nextDoubleFromTo(1.0, maxWeight);
 					network.addEdge(w, acquaintance, weight);
 				}
 				else{
