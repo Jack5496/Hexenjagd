@@ -72,18 +72,17 @@ public class PotentialWitch {
 		if(!isSentenced()){
 			Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
 
-			calcAccusation(context); //accusation jeden Schritt zurücksetzen, aber beeinflusst nächste Runde.
+			calcAccusation(context); //accusation jeden Schritt zurÃ¼cksetzen, aber beeinflusst nÃ¤chste Runde.
 			
 
 		}
 		
 	}
 	
-	private void calcSentence() {
+	private void calcSentence(Network<PotentialWitch> network) {
 		/*int counter = 0;
-		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
-		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
-		int max = getMaxAccusations();
+	
+		int max = getMaxAccusations(network);
 		Iterable<PotentialWitch> witches = network.getNodes();
 		for(PotentialWitch w: witches){
 			if(!w.isSentenced() && w.getAccused()> accusationBound2 && ((double)w.getAccused()/(double)max) > sentenceBound){
@@ -93,7 +92,7 @@ public class PotentialWitch {
 		}
 		System.out.println(counter);
 		return counter;*/
-		int max = getMaxAccusations();
+		int max = getMaxAccusations(network);
 		if(!this.isSentenced() && this.getAccused()> accusationBound2 && ((double)this.getAccused()/(double)max) > sentenceBound){
 				this._sentenced = true;
 		}
@@ -107,10 +106,8 @@ public class PotentialWitch {
 		this.accused = accused;
 	}
 
-	private int getMaxAccusations(){
+	private int getMaxAccusations(Network<PotentialWitch> network){
 		int maxAccusations = 0;
-		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
-		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
 		Iterable<PotentialWitch> witches = network.getNodes();
 		for(PotentialWitch w: witches){
 			if(!w.isSentenced() && w.getAccused()>maxAccusations){
@@ -119,10 +116,8 @@ public class PotentialWitch {
 		}
 		return maxAccusations;
 	}
-	private int getAllAccusations(){
+	private int getAllAccusations(Network<PotentialWitch> network){
 		int nb = 0;
-		Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
-		Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
 		Iterable<PotentialWitch> witches = network.getNodes();
 		for(PotentialWitch w: witches){
 			if(!w.isSentenced())
@@ -141,7 +136,7 @@ public class PotentialWitch {
 				RepastEdge<PotentialWitch> edge = network.getEdge(possAcc, this);
 				
 				if(!possAcc.equals(this) && !possAcc.isSentenced()){
-					int max = getMaxAccusations();
+					int max = getMaxAccusations(network);
 					//System.out.println(max);
 					if(max < 1)
 						max = 1;
@@ -205,7 +200,9 @@ public class PotentialWitch {
 	public void update(){
 		if(!sentenced){
 			accused = _accused;
-			/*int cntS =*/ calcSentence();
+			Context<PotentialWitch> context = (Context<PotentialWitch>)ContextUtils.getContext(this);
+			Network<PotentialWitch> network = (Network<PotentialWitch>)context.getProjection("hexenjagd");
+			/*int cntS =*/ calcSentence(network);
 			//calcFear(cntS, getAllAccusations());
 			sentenced = _sentenced;
 		}
