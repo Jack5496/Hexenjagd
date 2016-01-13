@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>A Data Set</name>
+  <name>de</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,16 +11,16 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>190264834</hashCode>
+    <hashCode>248856634</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>nb</string>
+      <string>Sentenced Witches</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>nb</id>
+        <id>Sentenced Witches</id>
         <className>hexenjagd.PotentialWitch</className>
-        <methodName>nbAccusations</methodName>
+        <methodName>sentenced</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

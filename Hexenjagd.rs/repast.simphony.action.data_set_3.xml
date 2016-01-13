@@ -1,7 +1,6 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>deaths</name>
-  <type>NON_AGGREGATE</type>
-  <sourceType>hexenjagd.PotentialWitch</sourceType>
+  <name>accusations</name>
+  <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
   <inclRandomSeed>false</inclRandomSeed>
@@ -12,16 +11,17 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>1357426090</hashCode>
+    <hashCode>841822143</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>Sentenced</string>
+      <string>AccusedWitches</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Sentenced</id>
+        <id>AccusedWitches</id>
         <className>hexenjagd.PotentialWitch</className>
-        <methodName>isSentenced</methodName>
+        <methodName>accused</methodName>
+        <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
   </methodDataSources>

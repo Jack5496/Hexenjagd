@@ -1,8 +1,8 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>Time Series Chart</name>
-  <dataSet>accusations</dataSet>
+  <name>Fear</name>
+  <dataSet>fear</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
-  <yAxisLabel></yAxisLabel>
+  <yAxisLabel>Fear</yAxisLabel>
   <chartTitle></chartTitle>
   <type>TIME_SERIES</type>
   <background>
@@ -21,9 +21,21 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
-      <string>AccusedWitches</string>
+      <string>fear witches</string>
       <SeriesData>
-        <label>AccusedWitches</label>
+        <label>fear witches</label>
+        <color>
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+          <alpha>255</alpha>
+        </color>
+      </SeriesData>
+    </entry>
+    <entry>
+      <string>fearAccusation</string>
+      <SeriesData>
+        <label>fearAccusation</label>
         <color>
           <red>0</red>
           <green>0</green>

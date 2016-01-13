@@ -5,9 +5,8 @@
 <repast.simphony.action.data_set context="Hexenjagd" file="repast.simphony.action.data_set_2.xml" />
 <repast.simphony.action.data_set context="Hexenjagd" file="repast.simphony.action.data_set_3.xml" />
 <repast.simphony.action.data_set context="Hexenjagd" file="repast.simphony.action.data_set_4.xml" />
-<repast.simphony.action.data_set context="Hexenjagd" file="repast.simphony.action.data_set_5.xml" />
-<repast.simphony.action.data_set context="Hexenjagd" file="repast.simphony.action.data_set_6.xml" />
+<repast.simphony.action.time_series_chart context="Hexenjagd" file="repast.simphony.action.time_series_chart_5.xml" />
+<repast.simphony.action.time_series_chart context="Hexenjagd" file="repast.simphony.action.time_series_chart_6.xml" />
 <repast.simphony.action.time_series_chart context="Hexenjagd" file="repast.simphony.action.time_series_chart_7.xml" />
 <repast.simphony.action.time_series_chart context="Hexenjagd" file="repast.simphony.action.time_series_chart_8.xml" />
-<repast.simphony.action.time_series_chart context="Hexenjagd" file="repast.simphony.action.time_series_chart_9.xml" />
 </Scenario>

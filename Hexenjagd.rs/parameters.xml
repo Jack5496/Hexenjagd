@@ -19,13 +19,13 @@
 									
 		/>
 				<parameter name="fearAMax" displayName="Fear of Accusation Maximum" type="double" 
-						defaultValue="1.0" 
+						defaultValue="0.8" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
 		/>
 				<parameter name="accBound2" displayName="Minimum Accusations for Sentence" type="int" 
-						defaultValue="5" 
+						defaultValue="10" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -49,7 +49,7 @@
 									
 		/>
 				<parameter name="suggMax" displayName="Suggestibility Maximum" type="double" 
-						defaultValue="1.0" 
+						defaultValue="0.9" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
@@ -73,7 +73,7 @@
 									
 		/>
 				<parameter name="fearAMin" displayName="Fear of Accusation Minimum" type="double" 
-						defaultValue="0.5" 
+						defaultValue="0.2" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									
@@ -85,7 +85,7 @@
 									
 		/>
 				<parameter name="fearWMax" displayName="Fear of Witches Maximum" type="double" 
-						defaultValue="1.0" 
+						defaultValue="0.7" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$DoubleConverter"
 									

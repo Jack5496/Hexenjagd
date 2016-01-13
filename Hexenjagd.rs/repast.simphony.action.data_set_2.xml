@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>A Data Set2</name>
+  <name>fear</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,16 +11,25 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>1483830346</hashCode>
+    <hashCode>-1080417800</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>bb2</string>
+      <string>fearAccusation</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>bb2</id>
+        <id>fearAccusation</id>
         <className>hexenjagd.PotentialWitch</className>
-        <methodName>nbAccusations</methodName>
+        <methodName>getFearOfAccusation</methodName>
+        <aggType>MEAN</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>fear witches</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>fear witches</id>
+        <className>hexenjagd.PotentialWitch</className>
+        <methodName>getFearOfWitches</methodName>
         <aggType>MEAN</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

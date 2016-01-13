@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>de</name>
+  <name>Sentences and Accusations</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,17 +11,44 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>248856634</hashCode>
+    <hashCode>-391348152</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>Sentenced Witches</string>
+      <string>Sentences</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Sentenced Witches</id>
+        <id>Sentences</id>
         <className>hexenjagd.PotentialWitch</className>
         <methodName>sentenced</methodName>
         <aggType>SUM</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Accusations</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Accusations</id>
+        <className>hexenjagd.PotentialWitch</className>
+        <methodName>accused</methodName>
+        <aggType>SUM</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Fear of Accusation</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Fear of Accusation</id>
+        <className>hexenjagd.PotentialWitch</className>
+        <methodName>getFearOfAccusation</methodName>
+        <aggType>MEAN</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Fear of Witches</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Fear of Witches</id>
+        <className>hexenjagd.PotentialWitch</className>
+        <methodName>getFearOfWitches</methodName>
+        <aggType>MEAN</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
   </methodDataSources>
